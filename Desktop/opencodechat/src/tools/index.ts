@@ -9,6 +9,7 @@ import * as obsidian from "./obsidian.js";
 import * as notion from "./notion.js";
 import * as zapier from "./zapier.js";
 import * as tasklog from "./tasklog.js";
+import * as browser from "./browser.js";
 
 export interface ToolDefinition {
   type: "function";
@@ -608,6 +609,162 @@ export const toolDefinitions: ToolDefinition[] = [
       },
     },
   },
+
+  // ── Browser ──────────────────────────────────────────
+  {
+    type: "function",
+    function: {
+      name: "browser_navigate",
+      description: "Navigate to a URL in the headless browser. Opens Chrome/Chromium. Use CHROME_PATH env var if Chrome is not auto-detected.",
+      parameters: {
+        type: "object",
+        properties: {
+          url: { type: "string", description: "The URL to navigate to" },
+        },
+        required: ["url"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_snapshot",
+      description: "Extract readable text content from the current browser page. Optionally pass a CSS selector to get text from a specific element.",
+      parameters: {
+        type: "object",
+        properties: {
+          selector: { type: "string", description: "Optional CSS selector to extract text from (e.g. 'article', '.content', '#main')" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_screenshot",
+      description: "Take a screenshot of the current browser page. Saves to workspace/screenshots/ as PNG.",
+      parameters: {
+        type: "object",
+        properties: {
+          filename: { type: "string", description: "Output filename (default: screenshot-TIMESTAMP.png)" },
+          full_page: { type: "boolean", description: "Capture full page (default: false = viewport only)" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_click",
+      description: "Click an element on the page by CSS selector. Waits for element to appear (10s timeout).",
+      parameters: {
+        type: "object",
+        properties: {
+          selector: { type: "string", description: "CSS selector for the element to click (e.g. 'button.submit', 'a.nav-link', '#login-btn')" },
+        },
+        required: ["selector"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_type",
+      description: "Type text into an input field. Waits for element to appear. Optionally clear field first.",
+      parameters: {
+        type: "object",
+        properties: {
+          selector: { type: "string", description: "CSS selector for the input element" },
+          text: { type: "string", description: "Text to type" },
+          clear_first: { type: "boolean", description: "Clear existing text before typing (default: false)" },
+        },
+        required: ["selector", "text"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_scroll",
+      description: "Scroll the page. Direction: up, down, top, bottom.",
+      parameters: {
+        type: "object",
+        properties: {
+          direction: { type: "string", description: "Scroll direction: up, down, top, bottom" },
+          amount: { type: "number", description: "Pixels to scroll (default: 500)" },
+        },
+        required: ["direction"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_evaluate",
+      description: "Run JavaScript code on the current page. Returns the result. Use for extracting data, scraping, interacting with page APIs.",
+      parameters: {
+        type: "object",
+        properties: {
+          script: { type: "string", description: "JavaScript code to execute" },
+        },
+        required: ["script"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_tabs",
+      description: "Manage browser tabs. Actions: list (show all tabs), new (open tab, optionally with URL), close (remove tab), switch (change active tab).",
+      parameters: {
+        type: "object",
+        properties: {
+          action: { type: "string", description: "Action: list, new, close, switch" },
+          url: { type: "string", description: "URL to open (for 'new' action) or tab ID (for 'switch' action)" },
+        },
+        required: ["action"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_wait",
+      description: "Wait for an element to appear or wait a fixed time. Use 'time:2000' to wait 2000ms, or a CSS selector to wait for an element.",
+      parameters: {
+        type: "object",
+        properties: {
+          selector: { type: "string", description: "CSS selector to wait for, or 'time:N' to wait N milliseconds" },
+          timeout_ms: { type: "number", description: "Max wait time in ms (default: 10000)" },
+        },
+        required: ["selector"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_back",
+      description: "Go back in browser history.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_info",
+      description: "Get current page URL and title.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "browser_close",
+      description: "Close the browser and free resources.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
 ];
 
 export async function executeTool(name: string, args: Record<string, string | boolean>): Promise<string> {
@@ -728,6 +885,32 @@ export async function executeTool(name: string, args: Record<string, string | bo
       return zapier.zapierWebhook(args.url as string, args.payload as string);
     case "zapier_run_action":
       return zapier.zapierRunAction(args.action_key as string, args.input as string);
+
+    // ── Browser ──────────────────────────────────────────
+    case "browser_navigate":
+      return browser.browserNavigate(args.url as string);
+    case "browser_snapshot":
+      return browser.browserSnapshot(args.selector as string | undefined);
+    case "browser_screenshot":
+      return browser.browserScreenshot(args.filename as string | undefined, args.full_page as boolean | undefined);
+    case "browser_click":
+      return browser.browserClick(args.selector as string);
+    case "browser_type":
+      return browser.browserType(args.selector as string, args.text as string, args.clear_first as boolean | undefined);
+    case "browser_scroll":
+      return browser.browserScroll(args.direction as string, args.amount ? parseInt(args.amount as string) : undefined);
+    case "browser_evaluate":
+      return browser.browserEvaluate(args.script as string);
+    case "browser_tabs":
+      return browser.browserTabs(args.action as string, args.url as string | undefined);
+    case "browser_wait":
+      return browser.browserWait(args.selector as string, args.timeout_ms ? parseInt(args.timeout_ms as string) : undefined);
+    case "browser_back":
+      return browser.browserBack();
+    case "browser_info":
+      return browser.browserInfo();
+    case "browser_close":
+      return browser.browserClose();
 
     default:
       return `ERROR: Unknown tool "${name}"`;

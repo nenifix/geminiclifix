@@ -97,6 +97,23 @@ Full GitHub workflow automation via the `gh` CLI:
 - **Fetch** any URL and extract readable content
 - **Download** files directly to your workspace
 
+### 🌐 Browser Automation (12 tools)
+Full headless browser control via Puppeteer + Chrome/Chromium:
+- **Navigate** to any URL
+- **Snapshot** — extract readable text (with optional CSS selector)
+- **Screenshot** — capture page as PNG (saved to workspace/screenshots/)
+- **Click** — click elements by CSS selector
+- **Type** — fill input fields with text
+- **Scroll** — up, down, top, bottom
+- **Evaluate** — run JavaScript on the page (scraping, data extraction)
+- **Tabs** — list, open, close, switch tabs
+- **Wait** — wait for elements or fixed time
+- **Back** — navigate back in history
+- **Info** — get current URL and title
+- **Close** — shut down the browser
+
+> **Requirements:** Chrome/Chromium installed. Auto-detects on Windows, macOS, Linux. Set `CHROME_PATH` env var if needed.
+
 ### 📝 Obsidian Vault Integration (7 tools)
 Connect to your Obsidian knowledge base:
 - **Read** any note from your vault
@@ -261,6 +278,7 @@ opencodechat   # run from any directory
 | `ZAPIER_API_KEY` | No | — | Zapier API key |
 | `ZAPIER_WEBHOOK_URL` | No | — | Zapier catch hook URL |
 | `TASK_LOG_DIR` | No | `./logs` | Task log directory |
+| `CHROME_PATH` | No | *(auto)* | Path to Chrome/Chromium executable for browser tools |
 
 *\*One of `OPENROUTER_API_KEY` or `MODEL_BASE_URL` is required.*
 
@@ -299,6 +317,23 @@ opencodechat   # run from any directory
 | `web_search` | Search the web (DuckDuckGo) |
 | `web_fetch` | Fetch and extract readable content from a URL |
 | `download_file` | Download any file to the workspace |
+
+### Browser (12 tools)
+
+| Tool | Description |
+|---|---|
+| `browser_navigate` | Navigate to a URL in the headless browser |
+| `browser_snapshot` | Extract readable text from the page (optional CSS selector) |
+| `browser_screenshot` | Take a screenshot, saves to workspace/screenshots/ |
+| `browser_click` | Click an element by CSS selector |
+| `browser_type` | Type text into an input field |
+| `browser_scroll` | Scroll the page (up/down/top/bottom) |
+| `browser_evaluate` | Run JavaScript on the page (scraping, extraction) |
+| `browser_tabs` | Manage tabs (list/new/close/switch) |
+| `browser_wait` | Wait for element or fixed time |
+| `browser_back` | Go back in browser history |
+| `browser_info` | Get current page URL and title |
+| `browser_close` | Close the browser |
 
 ### GitHub (16 tools)
 
@@ -426,9 +461,18 @@ You: Show me my open PRs
 
 You: Create a Notion page with today's meeting notes
 → Bot creates a new page in your Notion workspace
-
+```
 You: What model are you using?
 → Bot replies with current provider, model, and workspace info
+
+You: Go to https://example.com and tell me what's on the page
+→ Bot navigates browser, extracts text, summarizes content
+
+You: Take a screenshot of https://github.com/nenifix
+→ Bot captures screenshot and sends the file path
+
+You: Search Google for "Node.js 20 features" and click the first result
+→ Bot navigates, types into search, clicks result, reads page content
 ```
 
 ### Telegram Commands
@@ -466,6 +510,7 @@ nenicoder/
 │       ├── search.ts         # File content search
 │       ├── github.ts         # GitHub CLI wrappers (16 tools)
 │       ├── web.ts            # Web search / fetch / download
+│       ├── browser.ts         # Browser automation (Puppeteer + Chrome)
 │       ├── obsidian.ts       # Obsidian vault tools (7 tools)
 │       ├── notion.ts         # Notion API tools (6 tools)
 │       └── zapier.ts         # Zapier webhook tools (3 tools)
