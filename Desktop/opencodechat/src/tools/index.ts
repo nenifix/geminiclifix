@@ -10,6 +10,8 @@ import * as notion from "./notion.js";
 import * as zapier from "./zapier.js";
 import * as tasklog from "./tasklog.js";
 import * as browser from "./browser.js";
+import * as computer from "./computer.js";
+import * as mcu from "./mcu.js";
 
 export interface ToolDefinition {
   type: "function";
@@ -765,6 +767,296 @@ export const toolDefinitions: ToolDefinition[] = [
       parameters: { type: "object", properties: {} },
     },
   },
+
+  // ── Computer Use ───────────────────────────────────────
+  {
+    type: "function",
+    function: {
+      name: "computer_screenshot",
+      description: "Capture the desktop screen. Saves to workspace/screenshots/. Uses native OS commands (PowerShell on Windows, screencapture on macOS, scrot on Linux).",
+      parameters: {
+        type: "object",
+        properties: {
+          filename: { type: "string", description: "Output filename (default: screen-TIMESTAMP.png)" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_click",
+      description: "Click the mouse at pixel coordinates (x, y). Button: left or right. Optionally double-click.",
+      parameters: {
+        type: "object",
+        properties: {
+          x: { type: "string", description: "X coordinate (pixels from left)" },
+          y: { type: "string", description: "Y coordinate (pixels from top)" },
+          button: { type: "string", description: "left or right (default: left)" },
+          double_click: { type: "boolean", description: "Double-click (default: false)" },
+        },
+        required: ["x", "y"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_move",
+      description: "Move the mouse cursor to pixel coordinates (x, y).",
+      parameters: {
+        type: "object",
+        properties: {
+          x: { type: "string", description: "X coordinate (pixels from left)" },
+          y: { type: "string", description: "Y coordinate (pixels from top)" },
+        },
+        required: ["x", "y"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_type",
+      description: "Type text using the keyboard. Works on Windows (SendKeys), macOS (osascript), Linux (xdotool).",
+      parameters: {
+        type: "object",
+        properties: {
+          text: { type: "string", description: "Text to type" },
+          delay_ms: { type: "string", description: "Delay between keystrokes in ms (Linux only, default: 0)" },
+        },
+        required: ["text"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_key",
+      description: "Press a key or key combination. Examples: enter, tab, escape, ctrl+c, ctrl+v, alt+tab, win+r, f1.",
+      parameters: {
+        type: "object",
+        properties: {
+          key: { type: "string", description: "Key name or combo (e.g. 'enter', 'ctrl+c', 'alt+tab')" },
+        },
+        required: ["key"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_scroll",
+      description: "Scroll the mouse wheel. Direction: up or down.",
+      parameters: {
+        type: "object",
+        properties: {
+          direction: { type: "string", description: "up or down" },
+          amount: { type: "string", description: "Scroll ticks (default: 3)" },
+        },
+        required: ["direction"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_window",
+      description: "Manage desktop windows. Actions: list (show all windows), focus (bring to front), minimize.",
+      parameters: {
+        type: "object",
+        properties: {
+          action: { type: "string", description: "list, focus, minimize" },
+          target: { type: "string", description: "Window title or app name (for focus action)" },
+        },
+        required: ["action"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_clipboard",
+      description: "Read or write the system clipboard. Actions: read, write.",
+      parameters: {
+        type: "object",
+        properties: {
+          action: { type: "string", description: "read or write" },
+          text: { type: "string", description: "Text to write (required for write action)" },
+        },
+        required: ["action"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_screen_info",
+      description: "Get screen resolution, DPI, and current mouse position.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "computer_pixel",
+      description: "Get the RGB color of a pixel at coordinates (x, y).",
+      parameters: {
+        type: "object",
+        properties: {
+          x: { type: "string", description: "X coordinate" },
+          y: { type: "string", description: "Y coordinate" },
+        },
+        required: ["x", "y"],
+      },
+    },
+  },
+
+  // ── ESP32 / Arduino ────────────────────────────────────
+  {
+    type: "function",
+    function: {
+      name: "mcu_new_project",
+      description: "Create a new Arduino or ESP32 project with template code. Generates .ino sketch and platformio.ini.",
+      parameters: {
+        type: "object",
+        properties: {
+          name: { type: "string", description: "Project name" },
+          board: { type: "string", description: "Board type: esp32, arduino_uno, esp32cam, nodemcu (default: esp32)" },
+        },
+        required: ["name"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_write_code",
+      description: "Write source code to a file in an MCU project.",
+      parameters: {
+        type: "object",
+        properties: {
+          project_name: { type: "string", description: "Project folder name" },
+          filename: { type: "string", description: "Filename (e.g. main.ino, sensor.cpp)" },
+          code: { type: "string", description: "Source code content" },
+        },
+        required: ["project_name", "filename", "code"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_compile",
+      description: "Compile an Arduino/ESP32 sketch using arduino-cli.",
+      parameters: {
+        type: "object",
+        properties: {
+          project_name: { type: "string", description: "Project folder name" },
+          board: { type: "string", description: "FQBN board ID (default: esp32:esp32:esp32)" },
+        },
+        required: ["project_name"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_upload",
+      description: "Upload compiled sketch to a board via USB/serial. Auto-detects port if not specified.",
+      parameters: {
+        type: "object",
+        properties: {
+          project_name: { type: "string", description: "Project folder name" },
+          port: { type: "string", description: "Serial port (e.g. COM3, /dev/ttyUSB0). Use 'auto' to detect." },
+          board: { type: "string", description: "FQBN board ID (default: esp32:esp32:esp32)" },
+        },
+        required: ["project_name"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_serial",
+      description: "Read from or write to the serial monitor. Actions: read, write.",
+      parameters: {
+        type: "object",
+        properties: {
+          port: { type: "string", description: "Serial port (default: auto)" },
+          baud: { type: "string", description: "Baud rate (default: 115200)" },
+          action: { type: "string", description: "read or write" },
+          data: { type: "string", description: "Data to send (for write action)" },
+        },
+        required: ["action"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_boards",
+      description: "List connected Arduino/ESP32 boards and their ports.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_libraries",
+      description: "Search, install, or list Arduino libraries. Actions: search, install, list.",
+      parameters: {
+        type: "object",
+        properties: {
+          action: { type: "string", description: "search, install, or list" },
+          query: { type: "string", description: "Library name or search term" },
+        },
+        required: ["action"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_pinout",
+      description: "Get pinout reference for a board. Supported: esp32, arduino_uno, esp32cam, nodemcu.",
+      parameters: {
+        type: "object",
+        properties: {
+          board: { type: "string", description: "Board name (default: esp32)" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_example",
+      description: "Generate common MCU code examples. Types: blink, wifi_connect, web_server, mqtt, sensor_dht, oled, servo, bluetooth.",
+      parameters: {
+        type: "object",
+        properties: {
+          type: { type: "string", description: "Example type" },
+          board: { type: "string", description: "Board type (default: esp32)" },
+        },
+        required: ["type"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "mcu_debug",
+      description: "Get debugging help for common MCU issues. Topics: upload_failed, wifi_not_connecting, brownout, i2c_not_working, oled_blank.",
+      parameters: {
+        type: "object",
+        properties: {
+          issue: { type: "string", description: "Issue type" },
+        },
+        required: ["issue"],
+      },
+    },
+  },
 ];
 
 export async function executeTool(name: string, args: Record<string, string | boolean>): Promise<string> {
@@ -911,6 +1203,50 @@ export async function executeTool(name: string, args: Record<string, string | bo
       return browser.browserInfo();
     case "browser_close":
       return browser.browserClose();
+
+    // ── Computer Use ───────────────────────────────────────
+    case "computer_screenshot":
+      return computer.computerScreenshot(args.filename as string | undefined);
+    case "computer_click":
+      return computer.computerClick(args.x as string, args.y as string, args.button as string | undefined, args.double_click as boolean | undefined);
+    case "computer_move":
+      return computer.computerMove(args.x as string, args.y as string);
+    case "computer_type":
+      return computer.computerType(args.text as string, args.delay_ms as string | undefined);
+    case "computer_key":
+      return computer.computerKey(args.key as string);
+    case "computer_scroll":
+      return computer.computerScroll(args.direction as string, args.amount as string | undefined);
+    case "computer_window":
+      return computer.computerWindow(args.action as string, args.target as string | undefined);
+    case "computer_clipboard":
+      return computer.computerClipboard(args.action as string, args.text as string | undefined);
+    case "computer_screen_info":
+      return computer.computerScreenInfo();
+    case "computer_pixel":
+      return computer.computerPixel(args.x as string, args.y as string);
+
+    // ── ESP32 / Arduino ────────────────────────────────────
+    case "mcu_new_project":
+      return mcu.mcuNewProject(args.name as string, args.board as string | undefined);
+    case "mcu_write_code":
+      return mcu.mcuWriteCode(args.project_name as string, args.filename as string, args.code as string);
+    case "mcu_compile":
+      return mcu.mcuCompile(args.project_name as string, args.board as string | undefined);
+    case "mcu_upload":
+      return mcu.mcuUpload(args.project_name as string, args.port as string | undefined, args.board as string | undefined);
+    case "mcu_serial":
+      return mcu.mcuSerial(args.port as string | undefined, args.baud as string | undefined, args.action as string, args.data as string | undefined);
+    case "mcu_boards":
+      return mcu.mcuBoards();
+    case "mcu_libraries":
+      return mcu.mcuLibraries(args.action as string, args.query as string | undefined);
+    case "mcu_pinout":
+      return mcu.mcuPinout(args.board as string | undefined);
+    case "mcu_example":
+      return mcu.mcuExample(args.type as string, args.board as string | undefined);
+    case "mcu_debug":
+      return mcu.mcuDebug(args.issue as string);
 
     default:
       return `ERROR: Unknown tool "${name}"`;
