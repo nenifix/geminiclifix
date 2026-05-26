@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-6366f1?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJMMiA3djEwbDEwIDVsMTAtNVY3TDEyIDJ6IiBmaWxsPSIjZmZmIi8+PC9zdmc+)](https://modelcontextprotocol.io)
 
-*Build, deploy, manage your codebase, control your desktop, and program microcontrollers — all from a Telegram chat.*
+*Build, deploy, manage your codebase, control your desktop, program microcontrollers, and create/read PDFs — all from a Telegram chat.*
 
 [🚀 Quick Start](#-quick-start) · [✨ Features](#-features) · [🛠️ Tools](#️-tool-reference) · [🔌 API](#-mcp-server--rest-api) · [💬 Try It](#-try-it-now)
 
@@ -32,7 +32,7 @@ NeniCoder is an **open-source AI coding agent** that lives on Telegram. Message 
 
 **Under the hood:**
 - **LLM-powered** — works with OpenRouter (100+ models), Ollama (local), or LM Studio (local)
-- **Tool-driven** — 70+ tools for files, shell, GitHub, web, browser, computer, ESP32/Arduino, Obsidian, Notion, Zapier
+- **Tool-driven** — 80+ tools for files, shell, GitHub, web, browser, computer, ESP32/Arduino, PDF, Obsidian, Notion, Zapier
 - **MCP-compatible** — use it from Claude Code, Cursor, or any MCP-compatible IDE
 - **REST API** — HTTP endpoints for direct tool calls from any application
 
@@ -139,6 +139,16 @@ Microcontroller coding and deployment:
 - **Pinout** — pinout reference (ESP32, Uno, ESP32-CAM, NodeMCU)
 - **Example** — code templates (blink, wifi, mqtt, sensor, oled, servo, bluetooth)
 - **Debug** — fix common issues (upload, wifi, brownout, I2C, oled)
+
+### 📄 PDF Tools (7 tools)
+Create and read PDF documents — no extra packages needed:
+- **Create** — PDF from text/markdown (headers, lists, tables)
+- **Table** — formatted data table PDF
+- **Invoice** — professional invoice PDF
+- **Report** — multi-section report PDF
+- **Merge** — combine multiple PDFs
+- **Read** — extract text from PDF
+- **Info** — PDF metadata (pages, title, author, dates)
 
 ### 📝 Obsidian Vault Integration (7 tools)
 Connect to your Obsidian knowledge base:
@@ -419,6 +429,18 @@ opencodechat   # run from any directory
 | `gh_run_list` | List GitHub Actions runs |
 | `gh` | Raw pass-through to `gh` CLI |
 
+### PDF Tools (7 tools)
+
+| Tool | Description |
+|---|---|
+| `pdf_create` | Create PDF from text/markdown (headers, lists, tables) |
+| `pdf_create_table` | Create PDF with formatted data table |
+| `pdf_create_invoice` | Create professional invoice PDF |
+| `pdf_create_report` | Create multi-section report PDF |
+| `pdf_merge` | Merge multiple PDFs into one |
+| `pdf_read` | Extract text content from a PDF |
+| `pdf_info` | Get PDF metadata (pages, title, author, dates) |
+
 ### Obsidian (7 tools)
 
 | Tool | Description |
@@ -547,6 +569,15 @@ You: What's the color of the pixel at (100, 200)?
 You: List all my open windows
 → Bot returns window titles and process names
 
+You: Create a PDF report about my project
+→ Bot creates a professional PDF with sections → workspace/pdfs/
+
+You: Create an invoice for $500 for web design services
+→ Bot creates a formatted invoice PDF
+
+You: Read the text from my uploaded PDF
+→ Bot extracts and returns all text content
+
 You: Search Google for "Node.js 20 features" and click the first result
 → Bot navigates, types into search, clicks result, reads page content
 ```
@@ -578,7 +609,7 @@ nenicoder/
 │   ├── telegram.ts           # Telegram bot handlers (Telegraf)
 │   ├── mcp.ts                # MCP server + REST API
 │   └── tools/
-│       ├── index.ts          # Tool registry (50+ definitions + dispatcher)
+│       ├── index.ts          # Tool registry (80+ definitions + dispatcher)
 │       ├── exec.ts           # Shell command execution
 │       ├── read.ts           # File reading
 │       ├── write.ts          # File writing
@@ -589,6 +620,7 @@ nenicoder/
 │       ├── browser.ts         # Browser automation (Puppeteer + Chrome)
 │       ├── computer.ts        # Desktop automation (10 tools)
 │       ├── mcu.ts             # ESP32/Arduino coding (10 tools)
+│       ├── pdf.ts             # PDF create + read (7 tools)
 │       ├── obsidian.ts       # Obsidian vault tools (7 tools)
 │       ├── notion.ts         # Notion API tools (6 tools)
 │       └── zapier.ts         # Zapier webhook tools (3 tools)
