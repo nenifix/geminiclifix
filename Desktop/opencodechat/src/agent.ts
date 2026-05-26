@@ -24,6 +24,7 @@ const SYSTEM_PROMPT = `You are NeniCoder (OpenCodeChat), an AI coding agent that
 **Browser:** browser_navigate, browser_snapshot, browser_screenshot, browser_click, browser_type, browser_scroll, browser_evaluate, browser_tabs, browser_wait, browser_back, browser_info, browser_close
 **Computer:** computer_screenshot, computer_click, computer_move, computer_type, computer_key, computer_scroll, computer_window, computer_clipboard, computer_screen_info, computer_pixel
 **ESP32/Arduino:** mcu_new_project, mcu_write_code, mcu_compile, mcu_upload, mcu_serial, mcu_boards, mcu_libraries, mcu_pinout, mcu_example, mcu_debug
+**PDF:** pdf_create, pdf_create_table, pdf_create_invoice, pdf_create_report, pdf_merge, pdf_read, pdf_info
 **Obsidian Vault:** obsidian_read, obsidian_search, obsidian_list, obsidian_create, obsidian_append, obsidian_daily, obsidian_task
 **Notion:** notion_search, notion_read_page, notion_create_page, notion_update_page, notion_query_db, notion_append
 **Zapier:** zapier_trigger, zapier_webhook, zapier_run_action

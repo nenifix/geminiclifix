@@ -12,6 +12,7 @@ import * as tasklog from "./tasklog.js";
 import * as browser from "./browser.js";
 import * as computer from "./computer.js";
 import * as mcu from "./mcu.js";
+import * as pdfTools from "./pdf.js";
 
 export interface ToolDefinition {
   type: "function";
@@ -1057,6 +1058,116 @@ export const toolDefinitions: ToolDefinition[] = [
       },
     },
   },
+
+  // ── PDF Tools ──────────────────────────────────────────
+  {
+    type: "function",
+    function: {
+      name: "pdf_create",
+      description: "Create a PDF document from text or markdown content. Supports headers (# ## ###), lists (- *), tables (| col |), and horizontal rules (---). Saves to workspace/pdfs/.",
+      parameters: {
+        type: "object",
+        properties: {
+          filename: { type: "string", description: "Output filename (e.g. 'report.pdf' or 'report')" },
+          content: { type: "string", description: "Text or markdown content for the PDF" },
+          title: { type: "string", description: "Document title (optional)" },
+          author: { type: "string", description: "Document author (optional)" },
+        },
+        required: ["filename", "content"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "pdf_create_table",
+      description: "Create a PDF with a formatted data table. Headers as comma-separated string, rows as newline-separated comma-separated values.",
+      parameters: {
+        type: "object",
+        properties: {
+          filename: { type: "string", description: "Output filename" },
+          headers: { type: "string", description: "Comma-separated column headers (e.g. 'Name,Qty,Price')" },
+          rows: { type: "string", description: "Newline-separated rows, each comma-separated (e.g. 'Widget A,10,5.99\\nWidget B,5,12.99')" },
+          title: { type: "string", description: "Table title (optional)" },
+        },
+        required: ["filename", "headers", "rows"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "pdf_create_invoice",
+      description: "Create a professional invoice PDF. Pass invoice data as JSON or key:value format.",
+      parameters: {
+        type: "object",
+        properties: {
+          filename: { type: "string", description: "Output filename" },
+          data: { type: "string", description: "Invoice data as JSON string or key:value lines. Fields: company, address, number, date, client, items (JSON array or 'desc,qty,rate' lines), tax_rate, currency, notes" },
+        },
+        required: ["filename", "data"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "pdf_create_report",
+      description: "Create a multi-section report PDF. Sections separated by newlines, each as 'Section Title|Content'.",
+      parameters: {
+        type: "object",
+        properties: {
+          filename: { type: "string", description: "Output filename" },
+          title: { type: "string", description: "Report title" },
+          sections: { type: "string", description: "Sections as 'Title|Content\\nTitle2|Content2'" },
+        },
+        required: ["filename", "title", "sections"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "pdf_merge",
+      description: "Merge multiple PDFs into one. Pass filenames as comma-separated string.",
+      parameters: {
+        type: "object",
+        properties: {
+          output_filename: { type: "string", description: "Output filename" },
+          input_files: { type: "string", description: "Comma-separated list of PDF filenames to merge" },
+        },
+        required: ["output_filename", "input_files"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "pdf_read",
+      description: "Extract text content from a PDF file.",
+      parameters: {
+        type: "object",
+        properties: {
+          file_path: { type: "string", description: "Path to PDF file (relative to workspace or absolute)" },
+        },
+        required: ["file_path"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "pdf_info",
+      description: "Get PDF metadata: page count, title, author, creator, creation date, file size.",
+      parameters: {
+        type: "object",
+        properties: {
+          file_path: { type: "string", description: "Path to PDF file" },
+        },
+        required: ["file_path"],
+      },
+    },
+  },
 ];
 
 export async function executeTool(name: string, args: Record<string, string | boolean>): Promise<string> {
@@ -1247,6 +1358,22 @@ export async function executeTool(name: string, args: Record<string, string | bo
       return mcu.mcuExample(args.type as string, args.board as string | undefined);
     case "mcu_debug":
       return mcu.mcuDebug(args.issue as string);
+
+    // ── PDF Tools ──────────────────────────────────────────
+    case "pdf_create":
+      return pdfTools.pdfCreate(args.filename as string, args.content as string, args.title as string | undefined, args.author as string | undefined);
+    case "pdf_create_table":
+      return pdfTools.pdfCreateTable(args.filename as string, args.headers as string, args.rows as string, args.title as string | undefined);
+    case "pdf_create_invoice":
+      return pdfTools.pdfCreateInvoice(args.filename as string, args.data as string);
+    case "pdf_create_report":
+      return pdfTools.pdfCreateReport(args.filename as string, args.title as string, args.sections as string);
+    case "pdf_merge":
+      return pdfTools.pdfMerge(args.output_filename as string, args.input_files as string);
+    case "pdf_read":
+      return pdfTools.pdfRead(args.file_path as string);
+    case "pdf_info":
+      return pdfTools.pdfInfo(args.file_path as string);
 
     default:
       return `ERROR: Unknown tool "${name}"`;
