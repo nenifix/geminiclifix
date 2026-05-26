@@ -7,9 +7,9 @@ WHAT IS NeniCoder?
 ------------------
 NeniCoder is an open-source AI coding agent that lives on Telegram. Message it
 like a colleague — it reads files, writes code, runs builds, pushes to GitHub,
-searches the web, controls a browser, manages your desktop, and even writes
-ESP32/Arduino code. It's not a chatbot that talks about code. It's an agent
-that WRITES, TESTS, and DEPLOYS code for you.
+searches the web, controls a browser, manages your desktop, writes
+ESP32/Arduino code, and creates/read PDFs. It's not a chatbot that talks
+about code. It's an agent that WRITES, TESTS, and DEPLOYS code for you.
 
 Telegram bot: @Opencodeclichatbot (https://t.me/Opencodeclichatbot)
 GitHub:       https://github.com/nenifix/nenicoder
@@ -82,6 +82,15 @@ ESP32 / ARDUINO (10 tools)
   mcu_pinout        — Get pinout reference (ESP32, Uno, ESP32-CAM, NodeMCU)
   mcu_example       — Generate code examples (blink, wifi, mqtt, etc.)
   mcu_debug         — Debug common issues (upload, wifi, I2C, etc.)
+
+PDF TOOLS (7 tools)
+  pdf_create        — Create PDF from text/markdown (headers, lists, tables)
+  pdf_create_table  — Create PDF with formatted data table
+  pdf_create_invoice — Create professional invoice PDF
+  pdf_create_report — Create multi-section report PDF
+  pdf_merge         — Merge multiple PDFs into one
+  pdf_read          — Extract text content from a PDF
+  pdf_info          — Get PDF metadata (pages, title, author, dates)
 
 OBSIDIAN VAULT (7 tools)
   obsidian_read, obsidian_search, obsidian_list, obsidian_create,
@@ -202,6 +211,15 @@ USAGE EXAMPLES
   "What model are you using?"
   → Bot replies with current provider, model, and workspace info
 
+  "Create a PDF report about my project"
+  → Bot creates a professional PDF with sections → workspace/pdfs/
+
+  "Create an invoice for $500 for web design services"
+  → Bot creates a formatted invoice PDF
+
+  "Read the text from my uploaded PDF"
+  → Bot extracts and returns all text content
+
 ================================================================================
 PROJECT STRUCTURE
 ================================================================================
@@ -215,7 +233,7 @@ PROJECT STRUCTURE
   │   ├── telegram.ts           # Telegram bot handlers (Telegraf)
   │   ├── mcp.ts                # MCP server + REST API
   │   └── tools/
-  │       ├── index.ts          # Tool registry (70+ definitions + dispatcher)
+  │        ├── index.ts          # Tool registry (80+ definitions + dispatcher)
   │       ├── exec.ts           # Shell command execution
   │       ├── read.ts           # File reading
   │       ├── write.ts          # File writing
@@ -226,6 +244,7 @@ PROJECT STRUCTURE
   │       ├── browser.ts        # Browser automation (Puppeteer + Chrome)
   │       ├── computer.ts       # Desktop automation (10 tools)
   │       ├── mcu.ts            # ESP32/Arduino coding (10 tools)
+  │       ├── pdf.ts            # PDF create + read (7 tools)
   │       ├── obsidian.ts       # Obsidian vault tools (7 tools)
   │       ├── notion.ts         # Notion API tools (6 tools)
   │       └── zapier.ts         # Zapier webhook tools (3 tools)
