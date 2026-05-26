@@ -1,7 +1,7 @@
 {
   "name": "opencodechat",
   "version": "1.0.0",
-  "description": "Telegram-based AI coding agent with tool-calling. Works with OpenRouter, Ollama, and LM Studio.",
+  "description": "NeniCoder — AI coding agent on Telegram with 50+ tools. GitHub, Obsidian, Notion, Zapier, MCP. Built by Nenifix.",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
