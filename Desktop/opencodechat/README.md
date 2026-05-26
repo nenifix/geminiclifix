@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-6366f1?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJMMiA3djEwbDEwIDVsMTAtNVY3TDEyIDJ6IiBmaWxsPSIjZmZmIi8+PC9zdmc+)](https://modelcontextprotocol.io)
 
-*Build, deploy, and manage your entire codebase — from a Telegram chat.*
+*Build, deploy, manage your codebase, control your desktop, and program microcontrollers — all from a Telegram chat.*
 
 [🚀 Quick Start](#-quick-start) · [✨ Features](#-features) · [🛠️ Tools](#️-tool-reference) · [🔌 API](#-mcp-server--rest-api) · [💬 Try It](#-try-it-now)
 
@@ -32,7 +32,7 @@ NeniCoder is an **open-source AI coding agent** that lives on Telegram. Message 
 
 **Under the hood:**
 - **LLM-powered** — works with OpenRouter (100+ models), Ollama (local), or LM Studio (local)
-- **Tool-driven** — 50+ tools for files, shell, GitHub, web, Obsidian, Notion, Zapier
+- **Tool-driven** — 70+ tools for files, shell, GitHub, web, browser, computer, ESP32/Arduino, Obsidian, Notion, Zapier
 - **MCP-compatible** — use it from Claude Code, Cursor, or any MCP-compatible IDE
 - **REST API** — HTTP endpoints for direct tool calls from any application
 
@@ -114,6 +114,32 @@ Full headless browser control via Puppeteer + Chrome/Chromium:
 
 > **Requirements:** Chrome/Chromium installed. Auto-detects on Windows, macOS, Linux. Set `CHROME_PATH` env var if needed.
 
+### 🖥️ Computer Use (10 tools)
+Desktop automation — no extra packages needed (uses native OS commands):
+- **Screenshot** — capture the desktop screen
+- **Click** — mouse click at pixel coordinates (left/right/double)
+- **Move** — move mouse cursor
+- **Type** — keyboard input (SendKeys/osascript/xdotool)
+- **Key** — press key combos (ctrl+c, alt+tab, enter, etc.)
+- **Scroll** — mouse wheel up/down
+- **Window** — list/focus/minimize desktop windows
+- **Clipboard** — read/write system clipboard
+- **Screen Info** — resolution, DPI, mouse position
+- **Pixel** — get RGB color at coordinates
+
+### 🔧 ESP32 / Arduino (10 tools)
+Microcontroller coding and deployment:
+- **New Project** — create with template (.ino + platformio.ini)
+- **Write Code** — write source files
+- **Compile** — compile via arduino-cli
+- **Upload** — upload to board via USB/serial
+- **Serial** — read/write serial monitor
+- **Boards** — list connected boards
+- **Libraries** — search/install/list Arduino libraries
+- **Pinout** — pinout reference (ESP32, Uno, ESP32-CAM, NodeMCU)
+- **Example** — code templates (blink, wifi, mqtt, sensor, oled, servo, bluetooth)
+- **Debug** — fix common issues (upload, wifi, brownout, I2C, oled)
+
 ### 📝 Obsidian Vault Integration (7 tools)
 Connect to your Obsidian knowledge base:
 - **Read** any note from your vault
@@ -168,13 +194,21 @@ Every action is automatically logged to `logs/tasks.jsonl` with timestamps, user
 │  └──────────────┘  └─────┬─────┘  └──────────────────┘ │
 └──────────────────────────┬──────────────────────────────┘
                            │
-     ┌─────────────────────┼─────────────────────┐
-     ▼                     ▼                     ▼
-┌──────────┐    ┌──────────────┐    ┌──────────────────┐
-│ File     │    │  GitHub CLI  │    │  External APIs   │
-│ System   │    │  (gh)        │    │  Notion, Zapier  │
-│          │    │              │    │  Web, Obsidian   │
-└──────────┘    └──────────────┘    └──────────────────┘
+     ┌─────────────────────┬─────────────────────┬─────────────────────┐
+     ▼                     ▼                     ▼                     ▼
+┌──────────┐    ┌──────────────┐    ┌──────────────────┐    ┌──────────────┐
+│ File     │    │  GitHub CLI  │    │  External APIs   │    │  Hardware    │
+│ System   │    │  (gh)        │    │  Notion, Zapier  │    │  ESP32/Arduino│
+│          │    │              │    │  Web, Obsidian   │    │  Serial/USB  │
+└──────────┘    └──────────────┘    └──────────────────┘    └──────────────┘
+     │
+     ▼
+┌──────────────┐
+│  Desktop     │
+│  Screenshot  │
+│  Mouse/Key   │
+│  Windows     │
+└──────────────┘
 ```
 
 ### Agent Loop Flow
@@ -335,6 +369,36 @@ opencodechat   # run from any directory
 | `browser_info` | Get current page URL and title |
 | `browser_close` | Close the browser |
 
+### Computer Use (10 tools)
+
+| Tool | Description |
+|---|---|
+| `computer_screenshot` | Capture desktop screen → workspace/screenshots/ |
+| `computer_click` | Click mouse at (x, y) — left/right/double |
+| `computer_move` | Move mouse cursor to (x, y) |
+| `computer_type` | Type text via keyboard |
+| `computer_key` | Press key or combo (ctrl+c, alt+tab, enter, etc.) |
+| `computer_scroll` | Scroll mouse wheel up/down |
+| `computer_window` | List/focus/minimize desktop windows |
+| `computer_clipboard` | Read/write system clipboard |
+| `computer_screen_info` | Get resolution, DPI, mouse position |
+| `computer_pixel` | Get RGB color at pixel (x, y) |
+
+### ESP32 / Arduino (10 tools)
+
+| Tool | Description |
+|---|---|
+| `mcu_new_project` | Create project with template (.ino + platformio.ini) |
+| `mcu_write_code` | Write source files (.ino, .cpp, .h) |
+| `mcu_compile` | Compile via arduino-cli |
+| `mcu_upload` | Upload to board via USB/serial |
+| `mcu_serial` | Read/write serial monitor |
+| `mcu_boards` | List connected boards and ports |
+| `mcu_libraries` | Search/install/list Arduino libraries |
+| `mcu_pinout` | Pinout reference (ESP32, Uno, ESP32-CAM, NodeMCU) |
+| `mcu_example` | Code examples (blink, wifi, mqtt, sensor, oled, servo, bluetooth) |
+| `mcu_debug` | Debug common MCU issues |
+
 ### GitHub (16 tools)
 
 | Tool | Description |
@@ -471,6 +535,18 @@ You: Go to https://example.com and tell me what's on the page
 You: Take a screenshot of https://github.com/nenifix
 → Bot captures screenshot and sends the file path
 
+You: Create an ESP32 project called sensor-hub
+→ Bot creates project folder, writes web server code, generates platformio.ini
+
+You: Show me the ESP32 pinout
+→ Bot returns full GPIO, ADC, I2C, SPI, UART reference
+
+You: What's the color of the pixel at (100, 200)?
+→ Bot captures screen and returns RGB value
+
+You: List all my open windows
+→ Bot returns window titles and process names
+
 You: Search Google for "Node.js 20 features" and click the first result
 → Bot navigates, types into search, clicks result, reads page content
 ```
@@ -511,6 +587,8 @@ nenicoder/
 │       ├── github.ts         # GitHub CLI wrappers (16 tools)
 │       ├── web.ts            # Web search / fetch / download
 │       ├── browser.ts         # Browser automation (Puppeteer + Chrome)
+│       ├── computer.ts        # Desktop automation (10 tools)
+│       ├── mcu.ts             # ESP32/Arduino coding (10 tools)
 │       ├── obsidian.ts       # Obsidian vault tools (7 tools)
 │       ├── notion.ts         # Notion API tools (6 tools)
 │       └── zapier.ts         # Zapier webhook tools (3 tools)
