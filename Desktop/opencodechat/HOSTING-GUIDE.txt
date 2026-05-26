@@ -1,0 +1,409 @@
+================================================================================
+          NeniCoder v1.0.0 — Complete Hosting & Deployment Guide
+================================================================================
+
+TABLE OF CONTENTS
+  1. Free Tier VPS Providers (Ranked)
+  2. Platform-as-a-Service (PaaS) Free Tiers
+  3. Step-by-Step Deployment Guides
+  4. Keeping It Running 24/7
+  5. Cost Comparison
+
+================================================================================
+1. FREE TIER VPS PROVIDERS (Ranked Best to Worst)
+================================================================================
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ #1 — Oracle Cloud Always Free (BEST)                                        │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ RAM:        1 GB (ARM) or 1 GB (AMD)                                       │
+│ CPU:        1 OCPU (ARM) or 1 vCPU (AMD)                                   │
+│ Storage:    5 GB block storage                                              │
+│ Bandwidth:  10 TB/month                                                     │
+│ IP:         Public IPv4                                                     │
+│ OS:         Ubuntu, Debian, CentOS, Oracle Linux                           │
+│ Duration:   ALWAYS FREE (never expires)                                     │
+│ Region:     Multiple (choose closest to your users)                         │
+│ Sign up:    https://cloud.oracle.com/free                                   │
+│ Notes:       Best free VPS. ARM instances have 4 OCPU + 24GB RAM!           │
+│              You need a credit card for verification but won't be charged.  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ #2 — Google Cloud Free Tier                                                 │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ RAM:        1 GB (e2-micro)                                                 │
+│ CPU:        0.25 vCPU (shared)                                              │
+│ Storage:    30 GB standard persistent disk                                  │
+│ Bandwidth:  1 GB egress/month                                               │
+│ IP:         Public IPv4                                                     │
+│ OS:         Ubuntu, Debian, CentOS                                          │
+│ Duration:   Always free for e2-micro                                        │
+│ Region:     us-central1, us-east1, us-west1                                 │
+│ Sign up:    https://cloud.google.com/free                                   │
+│ Notes:       $300 free credit for 90 days on top of always-free.             │
+│              e2-micro is always free forever.                                │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ #3 — AWS Free Tier (EC2)                                                    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ RAM:        1 GB (t2.micro or t3.micro)                                     │
+│ CPU:        1 vCPU                                                          │
+│ Storage:    30 GB EBS                                                       │
+│ Bandwidth:  100 GB/month                                                    │
+│ IP:         Public IPv4 (Elastic IP)                                        │
+│ OS:         Ubuntu, Amazon Linux, Debian                                    │
+│ Duration:   12 months free (then pay-as-you-go)                             │
+│ Region:     Multiple                                                        │
+│ Sign up:    https://aws.amazon.com/free                                     │
+│ Notes:       Only free for 12 months. Set billing alerts to avoid charges.  │
+│              t2.micro is the most popular choice for small bots.             │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ #4 — Microsoft Azure Free Tier                                              │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ RAM:        1 GB (B1s burstable)                                            │
+│ CPU:        1 vCPU                                                          │
+│ Storage:    64 GB managed disk                                              │
+│ Bandwidth:  15 GB/month                                                     │
+│ IP:         Public IPv4                                                     │
+│ OS:         Ubuntu, Debian, CentOS                                          │
+│ Duration:   12 months free + $200 credit for 30 days                        │
+│ Region:     Multiple                                                        │
+│ Sign up:    https://azure.microsoft.com/en-us/free/                          │
+│ Notes:       B1s is always free up to 750 hours/month.                       │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ #5 — Hetzner Cloud (Cheap, not free)                                        │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ RAM:        2 GB (CX11)                                                     │
+│ CPU:        1 vCPU                                                          │
+│ Storage:    20 GB                                                           │
+│ Bandwidth:  20 TB                                                           │
+│ Cost:       €3.29/month (~$3.50)                                            │
+│ Region:     Germany, Finland, US                                            │
+│ Sign up:    https://hetzner.cloud                                           │
+│ Notes:       Not free, but cheapest paid VPS. Great for production.         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ #6 — Vultr Free Tier (NEW)                                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ RAM:        1 GB                                                            │
+│ CPU:        1 vCPU                                                          │
+│ Storage:    25 GB SSD                                                       │
+│ Bandwidth:    2 TB                                                          │
+│ Duration:   Always free (new offering)                                      │
+│ Sign up:    https://vultr.com                                               │
+│ Notes:       Reliable, good network, 17 global locations.                   │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+2. PLATFORM-as-a-SERVICE (PaaS) — Easiest Deployment
+================================================================================
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ RAILWAY (Recommended for beginners)                                         │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Free:     $5/month credit (enough for small bot)                            │
+│ Deploy:   Git push or Docker                                                │
+│ URL:      your-app.up.railway.app                                           │
+│ Sign up:  https://railway.app                                               │
+│ Notes:    Easiest deployment. Connect GitHub repo → auto-deploy.            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ RENDER                                                                   │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Free:     750 hours/month (enough for 1 service 24/7)                       │
+│ Deploy:   Git push                                                          │
+│ URL:      your-app.onrender.com                                             │
+│ Sign up:  https://render.com                                                │
+│ Notes:    Free tier spins down after 15 min inactivity (cold start ~30s).   │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ FLY.IO                                                                     │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Free:     3 shared-cpu-1x VMs, 256MB RAM each                               │
+│ Deploy:   fly deploy                                                        │
+│ URL:      your-app.fly.dev                                                  │
+│ Sign up:  https://fly.io                                                    │
+│ Notes:    Great for Docker-based apps. No cold starts.                      │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ DENO DEPLOY                                                                │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Free:     100,000 requests/day                                              │
+│ Deploy:   Git push                                                          │
+│ URL:      your-app.deno.dev                                                 │
+│ Sign up:  https://deno.com/deploy                                           │
+│ Notes:    Only for Deno/TypeScript. Very fast.                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ CYCLIC.SH                                                                 │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ Free:     Unlimited (generous free tier)                                    │
+│ Deploy:   Git push                                                          │
+│ URL:      your-app.cyclic.app                                               │
+│ Sign up:  https://cyclic.sh                                                 │
+│ Notes:    Full-stack, always-free, no cold starts.                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+3. STEP-BY-STEP DEPLOYMENT GUIDES
+================================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+OPTION A: Oracle Cloud (Best Free VPS) — Ubuntu 22.04
+──────────────────────────────────────────────────────────────────────────────
+
+1. SIGN UP
+   - Go to https://cloud.oracle.com/free
+   - Create account (need credit card for verification, won't be charged)
+   - Select region closest to you
+
+2. CREATE INSTANCE
+   - Click "Create a VM"
+   - Name: nenicoder
+   - Image: Ubuntu 22.04
+   - Shape: VM.Standard.E2.1.Micro (always free) OR
+           VM.Standard.A1.Flex (ARM, 4 OCPU, 24GB RAM — also free!)
+   - SSH key: Generate new key pair, download private key
+   - Click Create
+
+3. CONNECT VIA SSH
+   ssh -i ~/.ssh/your-key ubuntu@<PUBLIC_IP>
+
+4. INSTALL NODE.JS
+   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+   sudo apt-get install -y nodejs git
+
+5. CLONE & SETUP
+   git clone https://github.com/nenifix/nenicoder.git
+   cd nenicoder
+   npm install
+   npm run build
+
+6. CONFIGURE .env
+   nano .env
+   # Add your TELEGRAM_BOT_TOKEN, ALLOWED_USER_ID, OPENROUTER_API_KEY, MODEL
+
+7. INSTALL PM2 (process manager)
+   sudo npm install -g pm2
+   pm2 start dist/index.js --name nenicoder
+   pm2 save
+   pm2 startup
+
+8. OPEN FIREWALL (if needed)
+   sudo ufw allow 3001/tcp  # For REST API
+   sudo ufw enable
+
+9. DONE! Bot runs 24/7. Check with: pm2 logs nenicoder
+
+──────────────────────────────────────────────────────────────────────────────
+OPTION B: Railway (Easiest — No Server Management)
+──────────────────────────────────────────────────────────────────────────────
+
+1. SIGN UP at https://railway.app (login with GitHub)
+
+2. CREATE NEW PROJECT
+   - Click "New Project"
+   - Select "Deploy from GitHub repo"
+   - Authorize GitHub, select nenifix/nenicoder
+
+3. ADD ENVIRONMENT VARIABLES
+   - Click on your service → Variables
+   - Add:
+     TELEGRAM_BOT_TOKEN = your_token
+     ALLOWED_USER_ID = your_user_id
+     OPENROUTER_API_KEY = your_key
+     MODEL = openrouter/anthropic/claude-sonnet-4
+
+4. CONFIGURE START COMMAND
+   - Settings → Start Command: npm start
+   - Or add a Dockerfile (see below)
+
+5. DEPLOY
+   - Railway auto-deploys on git push
+   - Get URL from Settings → Networking
+
+──────────────────────────────────────────────────────────────────────────────
+OPTION C: Render (Free Tier)
+──────────────────────────────────────────────────────────────────────────────
+
+1. SIGN UP at https://render.com
+
+2. CREATE NEW WEB SERVICE
+   - Connect GitHub repo: nenifix/nenicoder
+   - Runtime: Node
+   - Build Command: npm install && npm run build
+   - Start Command: npm start
+
+3. ADD ENVIRONMENT VARIABLES (same as above)
+
+4. DEPLOY — auto-deploys on git push
+
+──────────────────────────────────────────────────────────────────────────────
+OPTION D: Docker Deployment (Any VPS)
+──────────────────────────────────────────────────────────────────────────────
+
+Create Dockerfile in project root:
+
+  FROM node:20-alpine
+  WORKDIR /app
+  COPY package*.json ./
+  RUN npm ci --only=production
+  COPY . .
+  RUN npm run build
+  EXPOSE 3001
+  CMD ["node", "dist/index.js"]
+
+Build & run:
+  docker build -t nenicoder .
+  docker run -d --name nenicoder --restart always \
+    -e TELEGRAM_BOT_TOKEN=xxx \
+    -e ALLOWED_USER_ID=xxx \
+    -e OPENROUTER_API_KEY=xxx \
+    -e MODEL=openrouter/anthropic/claude-sonnet-4 \
+    nenicoder
+
+──────────────────────────────────────────────────────────────────────────────
+OPTION E: Fly.io (Docker-based, Free)
+──────────────────────────────────────────────────────────────────────────────
+
+1. INSTALL flyctl
+   curl -L https://fly.io/install.sh | sh
+
+2. SIGN UP
+   fly auth signup
+
+3. LAUNCH
+   cd nenicoder
+   fly launch --name nenicoder
+
+4. SET SECRETS
+   fly secrets set TELEGRAM_BOT_TOKEN=xxx
+   fly secrets set ALLOWED_USER_ID=xxx
+   fly secrets set OPENROUTER_API_KEY=xxx
+   fly secrets set MODEL=openrouter/anthropic/claude-sonnet-4
+
+5. DEPLOY
+   fly deploy
+
+================================================================================
+4. KEEPING IT RUNNING 24/7
+================================================================================
+
+PM2 (Recommended for VPS):
+  npm install -g pm2
+  pm2 start dist/index.js --name nenicoder
+  pm2 save          # Save process list
+  pm2 startup       # Auto-start on reboot
+  pm2 logs          # View logs
+  pm2 restart nenicoder  # Restart
+  pm2 stop nenicoder     # Stop
+
+Systemd (Alternative):
+  sudo nano /etc/systemd/system/nenicoder.service
+
+  [Unit]
+  Description=NeniCoder Telegram Bot
+  After=network.target
+
+  [Service]
+  Type=simple
+  User=ubuntu
+  WorkingDirectory=/home/ubuntu/nenicoder
+  ExecStart=/usr/bin/node dist/index.js
+  Restart=always
+  RestartSec=10
+  Environment=NODE_ENV=production
+
+  [Install]
+  WantedBy=multi-user.target
+
+  sudo systemctl enable nenicoder
+  sudo systemctl start nenicoder
+  sudo systemctl status nenicoder
+
+================================================================================
+5. COST COMPARISON
+================================================================================
+
+Provider          | Free? | RAM  | CPU  | Storage | Bandwidth | Duration
+──────────────────┼───────┼──────┼──────┼─────────┼───────────┼──────────
+Oracle Cloud      | ✅    | 1-24G| 1-4  | 5-200GB | 10 TB     | Forever
+Google Cloud      | ✅    | 1 GB | 0.25 | 30 GB   | 1 GB      | Forever
+AWS EC2           | ✅*   | 1 GB | 1    | 30 GB   | 100 GB    | 12 months
+Azure             | ✅*   | 1 GB | 1    | 64 GB   | 15 GB     | 12 months
+Vultr             | ✅    | 1 GB | 1    | 25 GB   | 2 TB      | Forever
+Railway           | ✅**  | 512M| 0.5  | 1 GB    | 100 GB    | $5 credit
+Render            | ✅    | 512M| 0.1  | —       | 100 GB    | 750h/mo
+Fly.io            | ✅    | 256M| 0.25 | —       | 160 GB    | Forever
+Hetzner           | ❌    | 2 GB | 1    | 20 GB   | 20 TB     | $3.50/mo
+
+* Credit card required, free tier only
+** $5/month free credit, enough for small bot
+
+RECOMMENDATION:
+  - For learning/testing: Railway or Render (easiest)
+  - For production 24/7: Oracle Cloud Always Free (best value)
+  - For reliability: Hetzner at $3.50/mo (cheapest paid)
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Bot not responding?
+  1. Check logs: pm2 logs nenicoder
+  2. Verify .env: cat .env
+  3. Test manually: node dist/index.js
+  4. Check firewall: sudo ufw status
+
+Out of memory?
+  - Use swap: sudo fallocate -l 1G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
+  - Or upgrade to Oracle ARM (24GB RAM free)
+
+Port already in use?
+  - Kill old process: pm2 delete nenicoder
+  - Or: lsof -i :3001 && kill -9 <PID>
+
+GitHub push not deploying?
+  - Check webhook: Settings → Webhooks in GitHub repo
+  - Manual deploy: git push origin master
+
+================================================================================
+QUICK START (TL;DR)
+================================================================================
+
+Fastest way to get running:
+
+  1. Go to https://railway.app
+  2. New Project → Deploy from GitHub → nenifix/nenicoder
+  3. Add env vars (TELEGRAM_BOT_TOKEN, etc.)
+  4. Done. Bot is live.
+
+For a free VPS that never expires:
+
+  1. Go to https://cloud.oracle.com/free
+  2. Create Ubuntu VM (always free tier)
+  3. SSH in, run:
+     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+     sudo apt install -y nodejs git
+     git clone https://github.com/nenifix/nenicoder.git
+     cd nenicoder && npm install && npm run build
+     # Edit .env with your credentials
+     sudo npm install -g pm2
+     pm2 start dist/index.js --name nenicoder
+     pm2 save && pm2 startup
+
+================================================================================
+                         Built by Nenifix — Ghana
+                    https://github.com/nenifix/nenicoder
+================================================================================
