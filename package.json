@@ -1,0 +1,28 @@
+{
+  "name": "geminiclifix",
+  "version": "1.0.0",
+  "description": "GeminiCliFix — Google Gemini CLI on Telegram. Built by Nenifix.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "geminiclifix": "dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.4.0",
+    "dotenv": "^16.5.0",
+    "telegraf": "^4.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

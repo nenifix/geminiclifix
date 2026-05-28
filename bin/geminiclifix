@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$SCRIPT_DIR"
+if [ -f ".env" ]; then
+  while IFS='=' read -r key value; do
+    [[ "$key" =~ ^#.*$ ]] && continue
+    [[ -z "$key" ]] && continue
+    export "$key=$value"
+  done < .env
+fi
+exec node dist/index.js "$@"
